@@ -1,6 +1,6 @@
 ## Telegram Contests
 
-This is telegram official coding competition for JS developers.
+This is a Telegram official coding competition for JS developers.
 
 There are 2 stages of the competion where JS developers should build charts based on input data.
 
