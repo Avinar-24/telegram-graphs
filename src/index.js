@@ -1,18 +1,14 @@
-import { Chart } from './chart';
+import { Builder } from './builder';
 
-const xhr = new XMLHttpRequest();
+window.addEventListener('load', () => {
+  const xhr = new XMLHttpRequest();
 
-xhr.addEventListener('load', e => {
-  const data = JSON.parse(e.target.responseText);
-  const fragment = document.createDocumentFragment();
+  xhr.addEventListener('load', e => {
+    const chartData = JSON.parse(e.target.responseText);
 
-  data.forEach(chartData => {
-    const chart = Chart.build(chartData);
-
-    fragment.appendChild(chart);
+    Builder.run(chartData);
   });
 
-  document.body.appendChild(fragment);
+  xhr.open('GET', 'data.json');
+  xhr.send();
 });
-xhr.open('GET', 'data.json');
-xhr.send();
