@@ -13,6 +13,6 @@ The main rule of the contest is "**All the code you submit must be written by yo
 - the size of the app;
 - attention to details;
 - functionality;
-- Web Compatibility;
+- web compatibility;
 
 **Good luck!**
