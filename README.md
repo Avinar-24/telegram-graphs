@@ -1,4 +1,4 @@
-## Telegram Contests
+## Telegram Contest
 
 This is a Telegram official coding competition for JS developers.
 
