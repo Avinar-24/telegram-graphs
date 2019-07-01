@@ -1,0 +1,52 @@
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.legend__item {
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  margin: 0 4px 4px 0;
+}
+
+.legend__circle {
+  font-size: 24px;
+  border-radius: 50%;
+  height: 22px;
+  width: 22px;
+  margin-right: 8px;
+}
+
+.legend__circle_bg_none {
+  background: none !important;
+}
+
+.legend__checkmark {
+  position: relative;
+}
+
+.legend__checkmark::before,
+.legend__checkmark::after {
+  content: '';
+  background: #fff;
+  display: block;
+  height: 2px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.legend__checkmark::before {
+  width: 25%;
+  transform: rotate(40deg) translate(-3px, 6px);
+}
+
+.legend__checkmark::after {
+  width: 50%;
+  transform: rotate(-50deg) translate(-2px, -3px);
+}

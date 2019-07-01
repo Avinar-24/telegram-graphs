@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
@@ -10,25 +10,29 @@ module.exports = {
   devtool: 'source-map',
   plugins: [
     new HtmlWebPackPlugin({
-      template: './assets/index.html',
+      template: './assets/templates/index.html',
       filename: './index.html',
     }),
   ],
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
+        loader: 'awesome-typescript-loader',
       },
       {
-        test: /\.js$/,
+        test: /\.ts$/,
         loader: 'source-map-loader',
         enforce: 'pre',
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js', '.ts'],
   },
 };
