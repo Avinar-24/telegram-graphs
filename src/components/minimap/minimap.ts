@@ -6,8 +6,8 @@ const FIRST_POINT = 0;
 const FIRST_STEP = 1;
 const MINIMAP_HEIGHT = 100;
 
-export const Minimap = {
-  create(dataset: FormattedData, minimapWidth: ChartWidth): HTMLCanvasElement {
+export class Minimap {
+  static create(dataset: FormattedData, minimapWidth: ChartWidth): HTMLCanvasElement {
     const canvas = document.createElement('canvas');
 
     canvas.width = minimapWidth;
@@ -16,10 +16,9 @@ export const Minimap = {
     this.draw(canvas, dataset);
 
     return canvas;
-  },
+  }
 
-  // TODO: Private?
-  draw(canvas: HTMLCanvasElement, dataset: FormattedData): void {
+  private static draw(canvas: HTMLCanvasElement, dataset: FormattedData): void {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const showedLines = dataset.lines.filter(line => line.isShown);
     const maxYValue = Math.max(
@@ -39,9 +38,9 @@ export const Minimap = {
       ctx.strokeStyle = color;
       ctx.stroke();
     });
-  },
+  }
 
-  redraw(
+  static redraw(
     minimap: HTMLCanvasElement,
     dataset: FormattedData,
     lineState: boolean,
@@ -54,9 +53,9 @@ export const Minimap = {
     ctx.clearRect(0, 0, minimap.width, minimap.height);
 
     this.draw(minimap, dataset);
-  },
+  }
 
-  resize(minimap: HTMLCanvasElement, minimapWidth: ChartWidth): void {
+  static resize(minimap: HTMLCanvasElement, minimapWidth: ChartWidth): void {
     const ctx = minimap.getContext('2d') as CanvasRenderingContext2D;
     /**
      * Make an in-memory canvas
@@ -77,5 +76,5 @@ export const Minimap = {
      * Draw the snapshot on the new width with saved ratio
      */
     ctx.drawImage(inMemoryCanvas, 0, 0, minimap.width, minimap.height);
-  },
-};
+  }
+}

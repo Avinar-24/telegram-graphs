@@ -6,19 +6,19 @@ import { Dimensions } from '../types/dimensions';
 import { State, LegendItem } from '../types/state';
 import { isVerticalScrollExist, getChartName, getItemName } from '../utils/index';
 
-export const Builder = {
-  body: document.body as HTMLBodyElement,
-  html: document.documentElement as HTMLHtmlElement,
-  minimapGroup: [] as HTMLCanvasElement[],
-  dimensions: {
+export class Builder {
+  private static body = document.body as HTMLBodyElement;
+  private static html = document.documentElement as HTMLHtmlElement;
+  private static minimapGroup = [] as HTMLCanvasElement[];
+  private static dimensions = {
     body: {},
     html: {},
     window: {},
     // chartWidth: NaN, // Direct set?
-  } as Dimensions,
-  state: {} as State,
+  } as Dimensions;
+  private static state = {} as State;
 
-  initDimensions(): void {
+  private static initDimensions(): void {
     const self = this;
     let bodyWidth = this.body.offsetWidth;
     let htmlHeight = this.html.offsetHeight;
@@ -62,9 +62,9 @@ export const Builder = {
         return this.body.width; // self?
       },
     });
-  },
+  }
 
-  formatData(data: ChartData): FormattedData {
+  private static formatData(data: ChartData): FormattedData {
     const {
       columns,
       types,
@@ -102,9 +102,9 @@ export const Builder = {
     );
 
     return dataset;
-  },
+  }
 
-  bindControls(
+  private static bindControls(
     legend: HTMLDivElement,
     minimap: HTMLCanvasElement,
     dataset: FormattedData,
@@ -118,7 +118,9 @@ export const Builder = {
 
     children.forEach((legendItem: HTMLDivElement, index: number) => {
       const itemName = getItemName(index);
-      const itemState = (this.state[chartName].legend[itemName] = { isActive: true }) as LegendItem;
+      const itemState = (this.state[chartName].legend[itemName] = {
+        isActive: true,
+      }) as LegendItem;
       legendItem.addEventListener('click', () => {
         itemState.isActive = !itemState.isActive;
 
@@ -127,9 +129,9 @@ export const Builder = {
         Minimap.redraw(minimap, dataset, itemState.isActive, index);
       });
     });
-  },
+  }
 
-  run(chartData: ChartData[]): void {
+  static run(chartData: ChartData[]): void {
     /**
      * Initialize screen dimensions before components are being created
      */
@@ -157,9 +159,13 @@ export const Builder = {
      * Update the html height after charts injection
      */
     this.dimensions.html.height = this.html.offsetHeight;
-  },
+  }
 
-  update(dimensions: Dimensions, body: HTMLBodyElement, minimapGroup: HTMLCanvasElement[]): void {
+  private static update(
+    dimensions: Dimensions,
+    body: HTMLBodyElement,
+    minimapGroup: HTMLCanvasElement[]
+  ): void {
     if (isVerticalScrollExist(dimensions)) {
       /**
        * The body width is changed
@@ -168,5 +174,5 @@ export const Builder = {
 
       minimapGroup.forEach(minimap => Minimap.resize(minimap, dimensions.chartWidth));
     }
-  },
-};
+  }
+}

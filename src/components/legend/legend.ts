@@ -1,8 +1,8 @@
 import { FormattedData } from '../../types/formatted_data';
 import './legend.css';
 
-export const Legend = {
-  create(dataset: FormattedData): HTMLDivElement {
+export class Legend {
+  static create(dataset: FormattedData): HTMLDivElement {
     const { lines } = dataset;
     const legend = document.createElement('div');
 
@@ -27,9 +27,9 @@ export const Legend = {
     }, legend);
 
     return legend;
-  },
+  }
 
-  toggle(legendItem: HTMLDivElement): void {
+  static toggle(legendItem: HTMLDivElement): void {
     legendItem.children[0].classList.toggle('legend__circle_bg_none');
   }
-};
+}
