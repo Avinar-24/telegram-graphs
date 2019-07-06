@@ -91,8 +91,8 @@ export class Minimap {
     minimap.className = 'minimap';
     window.className = 'minimap__window';
 
-    minimap.append(canvas);
-    minimap.append(window);
+    minimap.appendChild(canvas);
+    minimap.appendChild(window);
 
     return minimap;
   }
