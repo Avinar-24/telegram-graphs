@@ -1,5 +1,6 @@
 import { FormattedData } from '../../types/formatted_data';
 import { ChartWidth } from '../../types/dimensions';
+import './minimap.css';
 
 const INIT_H_STEP = 0;
 const FIRST_POINT = 0;
@@ -7,15 +8,18 @@ const FIRST_STEP = 1;
 const MINIMAP_HEIGHT = 100;
 
 export class Minimap {
-  static create(dataset: FormattedData, minimapWidth: ChartWidth): HTMLCanvasElement {
+  static create(dataset: FormattedData, minimapWidth: ChartWidth): HTMLDivElement {
     const canvas = document.createElement('canvas');
+    let minimap: HTMLDivElement;
 
     canvas.width = minimapWidth;
     canvas.height = MINIMAP_HEIGHT; // TODO: Make it adjustable
 
     this.draw(canvas, dataset);
 
-    return canvas;
+    minimap = this.wrap(canvas);
+
+    return minimap;
   }
 
   private static draw(canvas: HTMLCanvasElement, dataset: FormattedData): void {
@@ -41,22 +45,24 @@ export class Minimap {
   }
 
   static redraw(
-    minimap: HTMLCanvasElement,
+    minimap: HTMLDivElement,
     dataset: FormattedData,
     lineState: boolean,
     lineIndex: number
   ): void {
-    const ctx = minimap.getContext('2d') as CanvasRenderingContext2D;
+    const canvas = minimap.children[0] as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
     dataset.lines[lineIndex].isShown = lineState;
 
-    ctx.clearRect(0, 0, minimap.width, minimap.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    this.draw(minimap, dataset);
+    this.draw(canvas, dataset);
   }
 
-  static resize(minimap: HTMLCanvasElement, minimapWidth: ChartWidth): void {
-    const ctx = minimap.getContext('2d') as CanvasRenderingContext2D;
+  static resize(minimap: HTMLDivElement, minimapWidth: ChartWidth): void {
+    const canvas = minimap.children[0] as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     /**
      * Make an in-memory canvas
      */
@@ -66,15 +72,28 @@ export class Minimap {
     /**
      * Taking a snapshot before the canvas width is changed
      */
-    inMemoryCanvas.width = minimap.width;
-    inMemoryCanvas.height = minimap.height;
-    inMemoryCtx.drawImage(minimap, 0, 0);
+    inMemoryCanvas.width = canvas.width;
+    inMemoryCanvas.height = canvas.height;
+    inMemoryCtx.drawImage(canvas, 0, 0);
 
-    minimap.width = minimapWidth;
+    canvas.width = minimapWidth;
 
     /**
      * Draw the snapshot on the new width with saved ratio
      */
-    ctx.drawImage(inMemoryCanvas, 0, 0, minimap.width, minimap.height);
+    ctx.drawImage(inMemoryCanvas, 0, 0, canvas.width, canvas.height);
+  }
+
+  private static wrap(canvas: HTMLCanvasElement): HTMLDivElement {
+    const minimap = document.createElement('div');
+    const window = document.createElement('div');
+
+    minimap.className = 'minimap';
+    window.className = 'minimap__window';
+
+    minimap.append(canvas);
+    minimap.append(window);
+
+    return minimap;
   }
 }

@@ -9,7 +9,7 @@ import { isVerticalScrollExist, getChartName, getItemName } from '../utils/index
 export class Builder {
   private static body = document.body as HTMLBodyElement;
   private static html = document.documentElement as HTMLHtmlElement;
-  private static minimapGroup = [] as HTMLCanvasElement[];
+  private static minimapGroup = [] as HTMLDivElement[];
   private static dimensions = {
     body: {},
     html: {},
@@ -104,9 +104,9 @@ export class Builder {
     return dataset;
   }
 
-  private static bindControls(
+  private static connectLegend(
     legend: HTMLDivElement,
-    minimap: HTMLCanvasElement,
+    minimap: HTMLDivElement,
     dataset: FormattedData,
     chartName: string
   ): void {
@@ -140,14 +140,13 @@ export class Builder {
     const fragment = document.createDocumentFragment();
 
     chartData.forEach((data: ChartData, index) => {
-      const dataset = this.formatData(data);
-      const minimap = Minimap.create(dataset, this.dimensions.chartWidth);
-      const legend = Legend.create(dataset);
       const chartName = getChartName(index);
+      const dataset = this.formatData(data);
+      const legend = Legend.create(dataset);
+      const minimap = Minimap.create(dataset, this.dimensions.chartWidth);
 
       this.minimapGroup.push(minimap);
-
-      this.bindControls(legend, minimap, dataset, chartName);
+      this.connectLegend(legend, minimap, dataset, chartName);
 
       fragment.appendChild(minimap);
       fragment.appendChild(legend);
@@ -164,7 +163,7 @@ export class Builder {
   private static update(
     dimensions: Dimensions,
     body: HTMLBodyElement,
-    minimapGroup: HTMLCanvasElement[]
+    minimapGroup: HTMLDivElement[]
   ): void {
     if (isVerticalScrollExist(dimensions)) {
       /**
