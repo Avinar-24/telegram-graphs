@@ -87,9 +87,28 @@ export class Minimap {
   private static wrap(canvas: HTMLCanvasElement): HTMLDivElement {
     const minimap = document.createElement('div');
     const window = document.createElement('div');
+    const selected = document.createElement('div');
+    const overlayLeft = document.createElement('div');
+    const overlayRight = document.createElement('div');
+    const thumbLeft = document.createElement('div'); // TODO: div?
+    const thumbRight = document.createElement('div'); // TODO: div?
 
     minimap.className = 'minimap';
     window.className = 'minimap__window';
+    overlayLeft.className = overlayRight.className = 'minimap__overlay';
+    thumbLeft.className = thumbRight.className = 'minimap__thumb';
+    selected.className = 'minimap__selected';
+    overlayLeft.className += ' minimap__overlay_left';
+    overlayRight.className += ' minimap__overlay_right';
+    thumbLeft.className += ' minimap__thumb_left';
+    thumbRight.className += ' minimap__thumb_right';
+
+    selected.appendChild(thumbLeft);
+    selected.appendChild(thumbRight);
+
+    window.appendChild(overlayLeft);
+    window.appendChild(selected);
+    window.appendChild(overlayRight);
 
     minimap.appendChild(canvas);
     minimap.appendChild(window);
