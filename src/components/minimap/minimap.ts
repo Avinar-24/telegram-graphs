@@ -52,19 +52,19 @@ export class Minimap {
     lineState: boolean,
     lineIndex: number
   ): void {
-    const canvas = minimap.children[0] as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const map = minimap.children[0] as HTMLCanvasElement;
+    const ctx = map.getContext('2d') as CanvasRenderingContext2D;
 
     dataset.lines[lineIndex].isShown = lineState;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, map.width, map.height);
 
-    this.drawLines(canvas, dataset);
+    this.drawLines(map, dataset);
   }
 
   static resize(minimap: HTMLDivElement, minimapWidth: ChartWidth): void {
-    const canvas = minimap.children[0] as HTMLCanvasElement;
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const map = minimap.children[0] as HTMLCanvasElement;
+    const ctx = map.getContext('2d') as CanvasRenderingContext2D;
     /**
      * Make an in-memory canvas
      */
@@ -74,16 +74,16 @@ export class Minimap {
     /**
      * Taking a snapshot before the canvas width is changed
      */
-    inMemoryCanvas.width = canvas.width;
-    inMemoryCanvas.height = canvas.height;
-    inMemoryCtx.drawImage(canvas, 0, 0);
+    inMemoryCanvas.width = map.width;
+    inMemoryCanvas.height = map.height;
+    inMemoryCtx.drawImage(map, 0, 0);
 
-    canvas.width = minimapWidth;
+    map.width = minimapWidth;
 
     /**
      * Draw the snapshot on the new width with saved ratio
      */
-    ctx.drawImage(inMemoryCanvas, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(inMemoryCanvas, 0, 0, map.width, map.height);
   }
 
   private static assemble(map: HTMLCanvasElement, controls: HTMLCanvasElement): HTMLDivElement {
