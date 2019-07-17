@@ -9,40 +9,42 @@ const MINIMAP_HEIGHT = 100;
 
 export class Minimap {
   static create(dataset: FormattedData, minimapWidth: ChartWidth): HTMLDivElement {
-    const canvas = document.createElement('canvas');
-    let minimap: HTMLDivElement;
+    const map = document.createElement('canvas');
+    const controls = document.createElement('canvas');
+    const minimap = this.assemble(map, controls);
 
-    canvas.width = minimapWidth;
-    canvas.height = MINIMAP_HEIGHT; // TODO: Make it adjustable
+    map.width = controls.width = minimapWidth;
+    map.height = controls.height = MINIMAP_HEIGHT; // TODO: Make it adjustable
 
-    this.draw(canvas, dataset);
-
-    minimap = this.wrap(canvas);
+    this.drawLines(map, dataset);
+    this.drawControls(controls);
 
     return minimap;
   }
 
-  private static draw(canvas: HTMLCanvasElement, dataset: FormattedData): void {
-    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+  private static drawLines(map: HTMLCanvasElement, dataset: FormattedData): void {
+    const ctx = map.getContext('2d') as CanvasRenderingContext2D;
     const showedLines = dataset.lines.filter(line => line.isShown);
     const maxYValue = Math.max(
       ...showedLines.reduce((acc, line) => acc.concat(line.points), [] as number[])
     );
-    const vStep = canvas.height / maxYValue;
-    const hStep = canvas.width / (dataset.timestamps.length - FIRST_STEP);
+    const vStep = map.height / maxYValue;
+    const hStep = map.width / (dataset.timestamps.length - FIRST_STEP);
 
     showedLines.forEach(({ points, color }) => {
       ctx.beginPath();
-      ctx.moveTo(INIT_H_STEP, canvas.height - points[FIRST_POINT] * vStep);
+      ctx.moveTo(INIT_H_STEP, map.height - points[FIRST_POINT] * vStep);
 
       for (let i = FIRST_STEP, length = points.length; i < length; i++) {
-        ctx.lineTo(hStep * i, canvas.height - points[i] * vStep);
+        ctx.lineTo(hStep * i, map.height - points[i] * vStep);
       }
 
       ctx.strokeStyle = color;
       ctx.stroke();
     });
   }
+
+  private static drawControls(controls: HTMLCanvasElement): void {}
 
   static redraw(
     minimap: HTMLDivElement,
@@ -57,7 +59,7 @@ export class Minimap {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    this.draw(canvas, dataset);
+    this.drawLines(canvas, dataset);
   }
 
   static resize(minimap: HTMLDivElement, minimapWidth: ChartWidth): void {
@@ -84,34 +86,15 @@ export class Minimap {
     ctx.drawImage(inMemoryCanvas, 0, 0, canvas.width, canvas.height);
   }
 
-  private static wrap(canvas: HTMLCanvasElement): HTMLDivElement {
+  private static assemble(map: HTMLCanvasElement, controls: HTMLCanvasElement): HTMLDivElement {
     const minimap = document.createElement('div');
-    const window = document.createElement('div');
-    const selected = document.createElement('div');
-    const overlayLeft = document.createElement('div');
-    const overlayRight = document.createElement('div');
-    const thumbLeft = document.createElement('div'); // TODO: div?
-    const thumbRight = document.createElement('div'); // TODO: div?
 
     minimap.className = 'minimap';
-    window.className = 'minimap__window';
-    overlayLeft.className = overlayRight.className = 'minimap__overlay';
-    thumbLeft.className = thumbRight.className = 'minimap__thumb';
-    selected.className = 'minimap__selected';
-    overlayLeft.className += ' minimap__overlay_left';
-    overlayRight.className += ' minimap__overlay_right';
-    thumbLeft.className += ' minimap__thumb_left';
-    thumbRight.className += ' minimap__thumb_right';
+    map.className = 'minimap__map';
+    controls.className = 'minimap__controls';
 
-    selected.appendChild(thumbLeft);
-    selected.appendChild(thumbRight);
-
-    window.appendChild(overlayLeft);
-    window.appendChild(selected);
-    window.appendChild(overlayRight);
-
-    minimap.appendChild(canvas);
-    minimap.appendChild(window);
+    minimap.appendChild(map);
+    minimap.appendChild(controls);
 
     return minimap;
   }
