@@ -6,7 +6,7 @@ window.addEventListener('load', () => {
 
   xhr.addEventListener('load', e => {
     const target = e.target as XMLHttpRequest;
-    const chartsData: Array<ChartData> = JSON.parse(target.responseText);
+    const chartsData: ChartData[] = JSON.parse(target.responseText);
 
     Builder.run(chartsData);
   });
