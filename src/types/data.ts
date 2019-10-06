@@ -5,8 +5,7 @@
 export type Label = string;
 
 /**
- * @description
- * There is a type of a vertical or horizontal column where the first element is its label.
+ * @type {Array.<Label, ...number[]>}
  * @example
  * ["x", 1542412800000, 1542499200000, ...]
  * ["y0", 37, 20, 32, 9, 32, 35, 1, 2, ...]
@@ -15,8 +14,6 @@ export type Label = string;
 export type Column = readonly [Label, ...number[]];
 
 /**
- * @description
- * There is a type of column colors where keys are vertical column labels and values are their colors.
  * @type {Object.<Label, string>}
  * @example
  * {
@@ -27,8 +24,6 @@ export type Column = readonly [Label, ...number[]];
 export type Colors = { readonly [propName: string]: string };
 
 /**
- * @description
- * There is a type of column names where keys are vertical column labels and values are their names.
  * @type {Object.<Label, string>}
  * @example
  * {
@@ -40,7 +35,8 @@ export type Names = { readonly [propName: string]: string };
 
 /**
  * @description
- * There are column types where vertical columns are defined as "line" and the horizontal one as "x".
+ * Vertical columns are defined as "line".
+ * Horizontal column is defined as "x".
  * @type {Object.<Label, string>}
  * @example
  * {
